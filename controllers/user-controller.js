@@ -17,6 +17,10 @@ const userController = {
                 path: 'thoughts',
                 select: '-__v'
             })
+            .populate({
+                path: 'friends',
+                select: '-__v'
+            })
             .select('-__v')
             .then(dbUserData => {
                 if(!dbUserData) {
@@ -61,10 +65,10 @@ const userController = {
             .catch(err => res.status(400).json(err));
     },
 
-    addFriend(req, res) {
+    addFriend( { params }, res) {
         User.findOneAndUpdate(
-            { _id: req.params.userId },
-            { $addToSet: { friends: req.friendId } },
+            { _id: params.userId },
+            { $addToSet: { friends: params.friendId } },
             { runValidators: true, new: true }
         )
         .then(dbUserData => {
@@ -79,7 +83,7 @@ const userController = {
     deleteFriend({ params }, res) {
         User.findOneAndUpdate(
             { _id: params.userId },
-            { $pull: { friends: { friendId: params.friendId } } },
+            { $pull: { friends: params.friendId } },
             { runValidators: true, new: true }
         )
         .then(dbUserData => {
