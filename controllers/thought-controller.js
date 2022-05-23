@@ -32,7 +32,7 @@ const thoughtController = {
                 return User.findOneAndUpdate(
                 { _id: body.userId },
                 { $push: { thoughts: _id } },
-                { new: true }
+                { new: true, runValidators: true }
                 );
             })
             .then(dbUserData => {
@@ -62,13 +62,13 @@ const thoughtController = {
 
     deleteThought({ params }, res) {
         Thought.findOneAndDelete({ _id: params.id })
-            /* .then(({ _id }) => {
+            .then(deletedThought => {
                 return User.findOneAndUpdate(
-                { _id: this.userId },
-                { $pull: { thoughts: _id } },
+                { username: deletedThought.username },
+                { $pull: { thoughts: params.id } },
                 { new: true }
                 );
-            }) */
+            })
             .then(deletedThought => {
                 if(!deletedThought) {
                     return res.status(404).json({ message: 'No thought with this id!' });
