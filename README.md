@@ -9,6 +9,7 @@ This is a simple Social Network API build using MongoDB via the Mongoose npm pac
     * Node.js
     * Mongoose
     * MongoDB
+    * Express
 
 ## Table of Contents
 
