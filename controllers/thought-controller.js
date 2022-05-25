@@ -93,19 +93,19 @@ const thoughtController = {
         });
     },
 
-    removeReaction({ params }, res) {
-        Thought.findOne({ _id: params.id })
-            .then(dbThoughtData => {
-                if(!dbThoughtData) {
-                    res.status(404).json({ message: 'No thought found with this id! '});
-                    return;
-                }
-                return Thought.remove
-            })
-            .catch(err => {
-                console.log(err);
-                res.status(400).json(err);
-            });
+    deleteReaction({ params }, res) {
+        Thought.findOneAndUpdate(
+            { _id: params.thoughtId },
+            { $pull: { reactions: { reactionId: params.reactionId } } },
+            { runValidators: true, new: true }
+        )
+        .then(dbReactionData => {
+            if(!dbReactionData) {
+                res.status(404).json({ message: 'No thought found with this id!' });
+                return;
+            }
+            res.json(dbReactionData);
+        });
     }
 };
 
